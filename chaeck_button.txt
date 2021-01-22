@@ -1,0 +1,72 @@
+private void radioButtonFemale_CheckedChanged(object sender, EventArgs e)
+        {
+            string number = "1";
+            AmountOfPersons.Items.Clear();
+            if (radioButtonFemale.Checked == true)
+            {
+                AmountOfPersons.Items.Clear();
+                AmountOfPersons.Items.Add(number);
+
+            }
+            else if (Check_Amount_Of_Persons.Contains(number))
+            {
+                foreach (string amount in Check_Amount_Of_Persons)
+                {
+                    AmountOfPersons.Items.Add(amount);
+                }
+            }
+        }
+
+        private void radioButtonMale_CheckedChanged(object sender, EventArgs e)
+        {
+            string number = "1";
+            AmountOfPersons.Items.Clear();
+            if (radioButtonMale.Checked == true)
+            {
+                AmountOfPersons.Items.Clear();
+                AmountOfPersons.Items.Add(number);
+
+            }
+            else if (Check_Amount_Of_Persons.Contains(number))
+            {
+                foreach (string amount in Check_Amount_Of_Persons)
+                {
+                    AmountOfPersons.Items.Add(amount);
+                }
+            }
+        }
+private bool Check_for_RoomNumber_with_gender(Room current_room)
+        {
+            List<int> amount_per_day = new List<int>();
+            int index = 0;
+            int amount_by_date = Int32.Parse(AmountOfPersons.SelectedItem.ToString());
+            int period = Get_Period();
+            for (int i = 0; i < period; i++)
+            {
+                foreach (string item in current_room.Name)
+                {
+                    if ((DateTime.ParseExact(current_room.Date_IN[index], ("dd.MM.yyyy"), CultureInfo.InvariantCulture) <= DateIN.Value.Date.AddDays(i)) &&
+                          (DateTime.ParseExact(current_room.Date_OUT[index], ("dd.MM.yyyy"), CultureInfo.InvariantCulture) >= DateOUT.Value.Date.AddDays(i)))
+                    {
+                        amount_by_date += Int32.Parse(current_room.Amount_of_persons_reserved[index]);
+
+                        if (current_room.Gender[index] != Get_Gender())
+                        {
+                            return false;
+                        }
+                    }
+                    index++;
+                }
+                amount_per_day.Add(amount_by_date);
+                amount_by_date = Int32.Parse(AmountOfPersons.SelectedItem.ToString());
+            }
+
+            foreach (int item in amount_per_day)
+            {
+                if (item > Int32.Parse(current_room.Amount_of_persons))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
